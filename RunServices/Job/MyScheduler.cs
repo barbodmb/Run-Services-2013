@@ -17,9 +17,10 @@ namespace RunServices.Job
             var trigger = TriggerBuilder.Create()
                 .WithDailyTimeIntervalSchedule(
                     builder =>
-                        builder.WithIntervalInMinutes(10)
+                        builder.WithIntervalInMinutes(3)
                             .OnEveryDay()
-                            .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(0, 0))).Build();
+                            .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(0, 0)))
+            .Build();
             scheduler.ScheduleJob(job, trigger);
         }
     }

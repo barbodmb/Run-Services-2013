@@ -13,9 +13,6 @@ namespace RunServices
         {
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            
-            //BundleConfig.RegisterBundles(BundleTable.Bundles);
-            //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
 
             MyScheduler.Start();
         }

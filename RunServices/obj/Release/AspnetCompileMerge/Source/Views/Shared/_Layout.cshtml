@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="~/Content/fontawesome/css/all.min.css">
+
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+</head>
+<body>
+    <div class="navbar navbar-fixed-top" style="background-color: #e7e7e7;">
+        <div class="container">
+            <div style="display:flex; align-items:center;justify-content:space-between;width:100%">
+                <a class="navbar-brand" style="color: #1358a7; font-weight: 700">Services Management</a>
+                <img src="~/Content/nomatec.png" />
+            </div>
+        </div>
+    </div>
+
+    <div class="container body-content" style="margin-top:20px">
+        @RenderBody()
+        @*<hr />
+            <footer>
+                @*<p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            </footer>*@
+    </div>
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Content/fontawesome/js/all.min.js"></script>
+
+</body>
+</html>

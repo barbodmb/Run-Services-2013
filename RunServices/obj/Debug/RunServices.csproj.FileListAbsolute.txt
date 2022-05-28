@@ -16,7 +16,6 @@ D:\Test Projects\2013\RunServices\RunServices\bin\System.Web.Mvc.xml
 D:\Test Projects\2013\RunServices\RunServices\obj\Debug\RunServices.dll
 D:\Test Projects\2013\RunServices\RunServices\obj\Debug\RunServices.pdb
 D:\Test Projects\2013\RunServices\RunServices\obj\Debug\RunServices.csprojResolveAssemblyReference.cache
-D:\Test Projects\2013\Run-Services-2013\RunServices\bin\Microsoft.Practices.Unity.xml
 D:\Test Projects\2013\Run-Services-2013\RunServices\bin\RunServices.dll.config
 D:\Test Projects\2013\Run-Services-2013\RunServices\bin\RunServices.dll
 D:\Test Projects\2013\Run-Services-2013\RunServices\bin\RunServices.pdb
@@ -43,6 +42,7 @@ D:\Test Projects\2013\Run-Services-2013\RunServices\bin\Common.Logging.Core.pdb
 D:\Test Projects\2013\Run-Services-2013\RunServices\bin\Common.Logging.Core.xml
 D:\Test Projects\2013\Run-Services-2013\RunServices\bin\Microsoft.Practices.ServiceLocation.pdb
 D:\Test Projects\2013\Run-Services-2013\RunServices\bin\Microsoft.Practices.ServiceLocation.xml
+D:\Test Projects\2013\Run-Services-2013\RunServices\bin\Microsoft.Practices.Unity.xml
 D:\Test Projects\2013\Run-Services-2013\RunServices\bin\Microsoft.Practices.Unity.Configuration.xml
 D:\Test Projects\2013\Run-Services-2013\RunServices\bin\Microsoft.Practices.Unity.RegistrationByConvention.xml
 D:\Test Projects\2013\Run-Services-2013\RunServices\bin\Newtonsoft.Json.xml
@@ -58,4 +58,3 @@ D:\Test Projects\2013\Run-Services-2013\RunServices\bin\System.Web.Helpers.xml
 D:\Test Projects\2013\Run-Services-2013\RunServices\bin\System.Web.Mvc.xml
 D:\Test Projects\2013\Run-Services-2013\RunServices\obj\Debug\RunServices.dll
 D:\Test Projects\2013\Run-Services-2013\RunServices\obj\Debug\RunServices.pdb
-D:\Test Projects\2013\Run-Services-2013\RunServices\obj\Debug\RunServices.csprojResolveAssemblyReference.cache

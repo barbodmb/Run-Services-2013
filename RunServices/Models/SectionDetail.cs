@@ -6,6 +6,8 @@ namespace RunServices.Models
 {
     public class ItemsCollection : ConfigurationElementCollection
     {
+        private Models.SectionDetail itemDetail;
+
         public List<SectionDetail> SectionDetail { get; set; }
 
         public ItemsCollection(List<SectionDetail> sectionDetail)
@@ -15,7 +17,13 @@ namespace RunServices.Models
 
         public ItemsCollection()
         {
-            
+
+        }
+
+        public ItemsCollection(Models.SectionDetail itemDetail)
+        {
+            // TODO: Complete member initialization
+            this.itemDetail = itemDetail;
         }
 
         protected override ConfigurationElement CreateNewElement()
