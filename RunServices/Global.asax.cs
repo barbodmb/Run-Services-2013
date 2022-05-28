@@ -1,4 +1,7 @@
-﻿using RunServices.Job;
+﻿using Quartz;
+using Quartz.Impl;
+using RunServices.Job;
+using RunServices.Models;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -10,9 +13,11 @@ namespace RunServices
         {
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            
+            //BundleConfig.RegisterBundles(BundleTable.Bundles);
+            //FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
 
-            var unityContainer = Microsoft.Web.Infrastructure.Bootstrapper.Initialise();
-            unityContainer.Resolve<IQuartzScheduler>().Run();
+            MyScheduler.Start();
         }
     }
 }

@@ -2247,13 +2247,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Bootstrapper.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Job\Bootstrapper.cs" />
-    <Compile Include="Job\UnityJobFactory.cs" />
+    <Compile Include="Job\ExcuteRunService.cs" />
+    <Compile Include="Job\MyScheduler.cs" />
     <Compile Include="Models\ConfigService.cs" />
     <Compile Include="Models\SectionDetail.cs" />
     <Compile Include="Models\ServiceProcess.cs" />
