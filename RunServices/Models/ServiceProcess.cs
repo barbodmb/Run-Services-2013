@@ -94,7 +94,7 @@ namespace RunServices.Models
             }
         }//end of Stop
 
-        public async void RestartService(string serviceName, int timeoutMilliseconds)
+        public async Task RestartService(string serviceName, int timeoutMilliseconds)
         {
             ServiceController service = new ServiceController(serviceName);
             try

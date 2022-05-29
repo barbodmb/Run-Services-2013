@@ -19,10 +19,10 @@ namespace RunServices.Controllers
             return View(m);
         }
         [HttpPost]
-        public ActionResult Restart(string serviceName)
+        public async Task<ActionResult> Restart(string serviceName)
         {
             ServiceProcess test = new ServiceProcess();
-            test.RestartService(serviceName, 100);
+            await test.RestartService(serviceName, 10000);
             return RedirectToAction("Index");
         }
 
