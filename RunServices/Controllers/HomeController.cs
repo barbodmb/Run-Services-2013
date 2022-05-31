@@ -6,19 +6,23 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using RunServices.Models;
+using RunServices.Exeption;
 
 namespace RunServices.Controllers
 {
     public class HomeController : Controller
     {
+        //[MyExpentions]
         // GET: Home
         public async Task<ActionResult> Index()
         {
             ServiceProcess test = new ServiceProcess();
-            List<ConfigService> m = test.ServicesNameStatus();
-            return View(m);
+            List<ConfigService> obj = test.ServicesNameStatus();
+            return View(obj);
         }
+
         [HttpPost]
+        //[MyExpentions]
         public async Task<ActionResult> Restart(string serviceName)
         {
             ServiceProcess test = new ServiceProcess();
@@ -27,6 +31,7 @@ namespace RunServices.Controllers
         }
 
         [HttpPost]
+        //[MyExpentions]
         public async Task<ActionResult> StartService(string serviceName)
         {
             ServiceProcess test = new ServiceProcess();
@@ -35,8 +40,15 @@ namespace RunServices.Controllers
         }
 
         [HttpPost]
+        //[MyExpentions]
         public async Task<ActionResult> Stop(string serviceName)
         {
+            //var path = @"C:\AppData\test.txt";
+            //using (StreamWriter sw = new StreamWriter(path))
+            //{
+            //    sw.Write("Mehdiii");
+            //}
+
             ServiceProcess test = new ServiceProcess();
             await test.StopService(serviceName);
             return RedirectToAction("Index");

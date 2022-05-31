@@ -13,8 +13,6 @@ namespace RunServices.Job
         private readonly ServiceProcess _serviceProcess = new ServiceProcess();
         public void Execute(IJobExecutionContext context)
         {
-            //ServiceProcess _serviceProcess = new ServiceProcess();
-            //_serviceProcess.StartService("MSSQLSERVER");
             _serviceProcess.RunAutoServices(_serviceProcess.GetStopServices(_serviceProcess.ServicesNameStatus()));
         }
     }

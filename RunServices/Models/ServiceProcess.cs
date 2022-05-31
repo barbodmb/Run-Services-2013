@@ -6,8 +6,6 @@ using System.Net.Http;
 using System.ServiceProcess;
 using System.Threading.Tasks;
 
-//https://stackoverflow.com/questions/17740048/quartz-net-trigger-does-not-fire-mvc4
-
 namespace RunServices.Models
 {
     public class ServiceProcess
@@ -26,34 +24,40 @@ namespace RunServices.Models
             var servicesInfo = new List<ConfigService>();
             var sectionDetail = new List<SectionDetail>();
             ServiceController[] services = ServiceController.GetServices();
-            foreach (ServiceController service in services)
+            try
             {
-                if (ConfigService != null)
-                    foreach (SectionDetail item in ConfigService.Items)
-                    {
-                        if (service.ServiceName.ToUpper() == item.ServiceName.ToUpper())
+                foreach (ServiceController service in services)
+                {
+                    if (ConfigService != null)
+                        foreach (SectionDetail item in ConfigService.Items)
                         {
-                            sectionDetail.Add(new SectionDetail
+                            if (service.ServiceName.ToUpper() == item.ServiceName.ToUpper())
                             {
-                                ServiceName = item.ServiceName,// + ":ServiceName",
-                                DisplayName = item.DisplayName,// + ":DisplayName",
-                                Interval = item.Interval,// + ":Interval",
-                                IntervalUnit = item.IntervalUnit,// + ":IntervalUnit",
-                                Url = item.Url, // + ":Url",
-                                RequestTimeOut = item.RequestTimeOut,//+ ":RequestTimeOut"
-                            });
+                                sectionDetail.Add(new SectionDetail
+                                {
+                                    ServiceName = item.ServiceName,// + ":ServiceName",
+                                    DisplayName = item.DisplayName,// + ":DisplayName",
+                                    Interval = item.Interval,// + ":Interval",
+                                    IntervalUnit = item.IntervalUnit,// + ":IntervalUnit",
+                                    Url = item.Url, // + ":Url",
+                                    RequestTimeOut = item.RequestTimeOut,//+ ":RequestTimeOut"
+                                });
 
-                            servicesInfo.Add(new ConfigService
-                            {
-                                ServiceName = service.ServiceName,
-                                ServiceStatus = service.Status.ToString(),
-                                Items = new ItemsCollection(sectionDetail)
-                            });
+                                servicesInfo.Add(new ConfigService
+                                {
+                                    ServiceName = service.ServiceName,
+                                    ServiceStatus = service.Status.ToString(),
+                                    Items = new ItemsCollection(sectionDetail)
+                                });
+                            }
                         }
-                    }
-            } //end of IsServiceInstall
-
+                } //end of IsServiceInstall
+            }
+            catch
+            {
+            }
             return servicesInfo;
+
         }//end of ServicesNameStatus
 
         public async Task StartService(string serviceName)
@@ -88,7 +92,7 @@ namespace RunServices.Models
                     service.WaitForStatus(ServiceControllerStatus.Stopped, timeout);
                 }
             }
-            catch(Exception m)
+            catch (Exception m)
             {
                 //Console.WriteLine("Can not open Service...");
             }
@@ -121,54 +125,60 @@ namespace RunServices.Models
         {
             var servicesInfo = new List<ConfigService>();
             var sectionDetail = new List<SectionDetail>();
-            if (servicesName != null)
+            try
             {
-                bool requestStatus = false;
-                foreach (var item in servicesName)
+                if (servicesName != null)
                 {
-                    foreach (SectionDetail itemDetail in item.Items.SectionDetail)
+                    bool requestStatus = false;
+                    foreach (var item in servicesName)
                     {
-                        if (itemDetail.IntervalUnit == "M")
+                        foreach (SectionDetail itemDetail in item.Items.SectionDetail)
                         {
-                            if (Convert.ToInt32(itemDetail.Interval) / DateTime.Now.Minute == 0
-                                && (DateTime.Now.Second <= 10))
+                            if (itemDetail.IntervalUnit == "M")
                             {
-                                requestStatus = SendRequest(itemDetail.Url, itemDetail.RequestTimeOut);
-                                if (!requestStatus || item.ServiceStatus == ServiceControllerStatus.Stopped.ToString()
-                                                   || item.ServiceStatus == ServiceControllerStatus.StopPending.ToString())
+                                if (Convert.ToInt32(itemDetail.Interval) / DateTime.Now.Minute == 0
+                                    && (DateTime.Now.Second <= 10))
                                 {
-                                    servicesInfo.Add(new ConfigService
+                                    requestStatus = SendRequest(itemDetail.Url, itemDetail.RequestTimeOut);
+                                    if (!requestStatus || item.ServiceStatus == ServiceControllerStatus.Stopped.ToString()
+                                                       || item.ServiceStatus == ServiceControllerStatus.StopPending.ToString())
                                     {
-                                        ServiceName = item.ServiceName,
-                                        ServiceStatus = item.ServiceStatus,
-                                        Items = new ItemsCollection(sectionDetail = item.Items.SectionDetail),
-                                        IsPending = !requestStatus
-                                    });
+                                        servicesInfo.Add(new ConfigService
+                                        {
+                                            ServiceName = item.ServiceName,
+                                            ServiceStatus = item.ServiceStatus,
+                                            Items = new ItemsCollection(sectionDetail = item.Items.SectionDetail),
+                                            IsPending = !requestStatus
+                                        });
+                                    }
                                 }
                             }
-                        }
 
-                        if (itemDetail.IntervalUnit == "H")
-                        {
-                            if (Convert.ToInt32(itemDetail.Interval) / DateTime.Now.Hour == 0
-                                && (DateTime.Now.Minute == 0))
+                            if (itemDetail.IntervalUnit == "H")
                             {
-                                var RequestStatus = SendRequest(itemDetail.Url, itemDetail.RequestTimeOut);
-                                if (!RequestStatus || item.ServiceStatus == ServiceControllerStatus.Stopped.ToString()
-                                                   || item.ServiceStatus == ServiceControllerStatus.StopPending.ToString())
+                                if (Convert.ToInt32(itemDetail.Interval) / DateTime.Now.Hour == 0
+                                    && (DateTime.Now.Minute == 0))
                                 {
-                                    servicesInfo.Add(new ConfigService
+                                    var RequestStatus = SendRequest(itemDetail.Url, itemDetail.RequestTimeOut);
+                                    if (!RequestStatus || item.ServiceStatus == ServiceControllerStatus.Stopped.ToString()
+                                                       || item.ServiceStatus == ServiceControllerStatus.StopPending.ToString())
                                     {
-                                        ServiceName = item.ServiceName,
-                                        ServiceStatus = item.ServiceStatus,
-                                        Items = new ItemsCollection(sectionDetail = item.Items.SectionDetail),
-                                        IsPending = !RequestStatus
-                                    });
+                                        servicesInfo.Add(new ConfigService
+                                        {
+                                            ServiceName = item.ServiceName,
+                                            ServiceStatus = item.ServiceStatus,
+                                            Items = new ItemsCollection(sectionDetail = item.Items.SectionDetail),
+                                            IsPending = !RequestStatus
+                                        });
+                                    }
                                 }
                             }
                         }
                     }
                 }
+            }
+            catch
+            {
             }
 
             return servicesInfo;
@@ -176,23 +186,29 @@ namespace RunServices.Models
 
         public async Task RunAutoServices(List<ConfigService> configServices)
         {
-            foreach (var item in configServices)
+            try
             {
-                foreach (SectionDetail itemSectionDetail in item.Items.SectionDetail)
+                foreach (var item in configServices)
                 {
-                    if (itemSectionDetail != null && itemSectionDetail.IntervalUnit != "")
+                    foreach (SectionDetail itemSectionDetail in item.Items.SectionDetail)
                     {
-                        if (item.IsPending && (item.ServiceStatus != ServiceControllerStatus.Stopped.ToString()
-                                               || item.ServiceStatus != ServiceControllerStatus.StopPending.ToString()))
+                        if (itemSectionDetail != null && itemSectionDetail.IntervalUnit != "")
                         {
-                            RestartService(item.ServiceName, 1000);
-                        }
-                        else
-                        {
-                            StartService(item.ServiceName);
+                            if (item.IsPending && (item.ServiceStatus != ServiceControllerStatus.Stopped.ToString()
+                                                   || item.ServiceStatus != ServiceControllerStatus.StopPending.ToString()))
+                            {
+                                RestartService(item.ServiceName, 1000);
+                            }
+                            else
+                            {
+                                StartService(item.ServiceName);
+                            }
                         }
                     }
                 }
+            }
+            catch
+            {
             }
         }//end of RunAutoServices
 

@@ -56,6 +56,10 @@ D:\Test Projects\2013\Run-Services-2013\RunServices\bin\System.Web.Webpages.Depl
 D:\Test Projects\2013\Run-Services-2013\RunServices\bin\System.Web.Webpages.Razor.xml
 D:\Test Projects\2013\Run-Services-2013\RunServices\bin\System.Web.Helpers.xml
 D:\Test Projects\2013\Run-Services-2013\RunServices\bin\System.Web.Mvc.xml
-D:\Test Projects\2013\Run-Services-2013\RunServices\obj\Debug\RunServices.csprojResolveAssemblyReference.cache
 D:\Test Projects\2013\Run-Services-2013\RunServices\obj\Debug\RunServices.dll
 D:\Test Projects\2013\Run-Services-2013\RunServices\obj\Debug\RunServices.pdb
+D:\Test Projects\2013\Run-Services-2013\RunServices\bin\Elmah.dll
+D:\Test Projects\2013\Run-Services-2013\RunServices\bin\Elmah.Mvc.dll
+D:\Test Projects\2013\Run-Services-2013\RunServices\bin\Microsoft.Web.Infrastructure.dll
+D:\Test Projects\2013\Run-Services-2013\RunServices\bin\System.ServiceProcess.dll
+D:\Test Projects\2013\Run-Services-2013\RunServices\obj\Debug\RunServices.csprojResolveAssemblyReference.cache
