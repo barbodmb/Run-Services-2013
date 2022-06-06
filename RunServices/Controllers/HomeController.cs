@@ -7,50 +7,48 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using RunServices.Models;
 using RunServices.Exeption;
+using System.Globalization;
 
 namespace RunServices.Controllers
 {
     public class HomeController : Controller
     {
-        //[MyExpentions]
+        [MyExpentions]
         // GET: Home
         public async Task<ActionResult> Index()
         {
-            ServiceProcess test = new ServiceProcess();
-            List<ConfigService> obj = test.ServicesNameStatus();
+            GlobalVariables.UserIP = Request.UserHostAddress;
+            GlobalVariables.HostName = System.Net.Dns.GetHostEntry(Request.UserHostAddress).HostName;
+
+            ServiceProcess services = new ServiceProcess();
+            List<ConfigService> obj = services.ServicesNameStatus();
             return View(obj);
         }
 
         [HttpPost]
-        //[MyExpentions]
+        [MyExpentions]
         public async Task<ActionResult> Restart(string serviceName)
         {
-            ServiceProcess test = new ServiceProcess();
-            await test.RestartService(serviceName, 10000);
+            ServiceProcess services = new ServiceProcess();
+            await services.RestartService(serviceName, 10000, "Manual");
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        //[MyExpentions]
+        [MyExpentions]
         public async Task<ActionResult> StartService(string serviceName)
         {
-            ServiceProcess test = new ServiceProcess();
-            await test.StartService(serviceName);
+            ServiceProcess services = new ServiceProcess();
+            await services.StartService(serviceName, "Manual");
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        //[MyExpentions]
+        [MyExpentions]
         public async Task<ActionResult> Stop(string serviceName)
         {
-            //var path = @"C:\AppData\test.txt";
-            //using (StreamWriter sw = new StreamWriter(path))
-            //{
-            //    sw.Write("Mehdiii");
-            //}
-
-            ServiceProcess test = new ServiceProcess();
-            await test.StopService(serviceName);
+            ServiceProcess services = new ServiceProcess();
+            await services.StopService(serviceName, "Manual");
             return RedirectToAction("Index");
         }
     }

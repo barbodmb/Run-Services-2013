@@ -2271,6 +2271,7 @@
     <Compile Include="Job\ExcuteRunService.cs" />
     <Compile Include="Job\MyScheduler.cs" />
     <Compile Include="Models\ConfigService.cs" />
+    <Compile Include="Models\GlobalVariables.cs" />
     <Compile Include="Models\SectionDetail.cs" />
     <Compile Include="Models\ServiceProcess.cs" />
   </ItemGroup>

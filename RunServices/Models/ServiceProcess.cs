@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.ServiceProcess;
@@ -60,36 +62,44 @@ namespace RunServices.Models
 
         }//end of ServicesNameStatus
 
-        public async Task StartService(string serviceName)
+        public async Task StartService(string serviceName, string actionState)
         {
             ServiceController service = new ServiceController(serviceName);
             try
             {
                 if (service.Status == ServiceControllerStatus.Stopped)
                 {
-                    int millisec = Environment.TickCount;
-                    TimeSpan timeout = TimeSpan.FromMilliseconds(millisec);
-                    service.Start();
-                    service.WaitForStatus(ServiceControllerStatus.Running, timeout);
+                    //int millisec = Environment.TickCount;
+                    //TimeSpan timeout = TimeSpan.FromSeconds(millisec);
+                    await Task.Run(() =>
+                    {
+                        service.Start();
+                    });
+                    service.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(120));
+                    Logging(serviceName, "Start", actionState);
                 }
             }
-            catch
+            catch(Exception ex)
             {
                 //Console.WriteLine("Can not open Service...");
             }
         }//end of Start
 
-        public async Task StopService(string serviceName)
+        public async Task StopService(string serviceName, string actionState)
         {
             ServiceController service = new ServiceController(serviceName);
             try
             {
                 if (service.Status == ServiceControllerStatus.Running)
                 {
-                    var millisec = Environment.TickCount;
-                    TimeSpan timeout = TimeSpan.FromMilliseconds(millisec);
-                    service.Stop();
-                    service.WaitForStatus(ServiceControllerStatus.Stopped, timeout);
+                    //var millisec = Environment.TickCount;
+                    //TimeSpan timeout = TimeSpan.FromSeconds(millisec);
+                    await Task.Run(() =>
+                    {
+                        service.Stop();
+                    });                    
+                    service.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(120));
+                    Logging(serviceName, "Stop", actionState);
                 }
             }
             catch (Exception m)
@@ -98,7 +108,7 @@ namespace RunServices.Models
             }
         }//end of Stop
 
-        public async Task RestartService(string serviceName, int timeoutMilliseconds)
+        public async Task RestartService(string serviceName, int timeoutMilliseconds, string actionState)
         {
             ServiceController service = new ServiceController(serviceName);
             try
@@ -106,20 +116,21 @@ namespace RunServices.Models
                 int millisec1 = Environment.TickCount;
                 TimeSpan timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds);
 
-                await StopService(serviceName);
+                await StopService(serviceName, actionState);
                 service.WaitForStatus(ServiceControllerStatus.Stopped, timeout);
 
                 int millisec2 = Environment.TickCount;
                 timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds - (millisec2 - millisec1));
 
-                await StartService(serviceName);
+                await StartService(serviceName, actionState);
                 service.WaitForStatus(ServiceControllerStatus.Running, timeout);
+                Logging(serviceName, "Restart", actionState);
             }
             catch
             {
                 // ...
             }
-        }//end of REstart
+        }//end of Restart
 
         public List<ConfigService> GetStopServices(List<ConfigService> servicesName)
         {
@@ -136,12 +147,12 @@ namespace RunServices.Models
                         {
                             if (itemDetail.IntervalUnit == "M")
                             {
-                                if (Convert.ToInt32(itemDetail.Interval) / DateTime.Now.Minute == 0
-                                    && (DateTime.Now.Second <= 10))
+                                if (Convert.ToInt32(itemDetail.Interval) / DateTime.Now.Minute == 0)
+                                //&& (DateTime.Now.Second <= 10))
                                 {
                                     requestStatus = SendRequest(itemDetail.Url, itemDetail.RequestTimeOut);
-                                    if (!requestStatus || item.ServiceStatus == ServiceControllerStatus.Stopped.ToString()
-                                                       || item.ServiceStatus == ServiceControllerStatus.StopPending.ToString())
+                                    if (!requestStatus || item.ServiceStatus == ServiceControllerStatus.Stopped.ToString())
+                                    //|| item.ServiceStatus == ServiceControllerStatus.StopPending.ToString())
                                     {
                                         servicesInfo.Add(new ConfigService
                                         {
@@ -156,12 +167,12 @@ namespace RunServices.Models
 
                             if (itemDetail.IntervalUnit == "H")
                             {
-                                if (Convert.ToInt32(itemDetail.Interval) / DateTime.Now.Hour == 0
-                                    && (DateTime.Now.Minute == 0))
+                                if (Convert.ToInt32(itemDetail.Interval) / DateTime.Now.Hour == 0)
+                                //&& (DateTime.Now.Minute == 0))
                                 {
                                     var RequestStatus = SendRequest(itemDetail.Url, itemDetail.RequestTimeOut);
-                                    if (!RequestStatus || item.ServiceStatus == ServiceControllerStatus.Stopped.ToString()
-                                                       || item.ServiceStatus == ServiceControllerStatus.StopPending.ToString())
+                                    if (!RequestStatus || item.ServiceStatus == ServiceControllerStatus.Stopped.ToString())
+                                    //|| item.ServiceStatus == ServiceControllerStatus.StopPending.ToString())
                                     {
                                         servicesInfo.Add(new ConfigService
                                         {
@@ -194,14 +205,14 @@ namespace RunServices.Models
                     {
                         if (itemSectionDetail != null && itemSectionDetail.IntervalUnit != "")
                         {
-                            if (item.IsPending && (item.ServiceStatus != ServiceControllerStatus.Stopped.ToString()
-                                                   || item.ServiceStatus != ServiceControllerStatus.StopPending.ToString()))
+                            if (item.IsPending && (item.ServiceStatus != ServiceControllerStatus.Stopped.ToString()))
+                            //|| item.ServiceStatus != ServiceControllerStatus.StopPending.ToString()))
                             {
-                                RestartService(item.ServiceName, 1000);
+                                await RestartService(item.ServiceName, 1000, "Auto");
                             }
                             else
                             {
-                                StartService(item.ServiceName);
+                                await StartService(item.ServiceName, "Auto");
                             }
                         }
                     }
@@ -233,5 +244,22 @@ namespace RunServices.Models
             }
             return false;
         }
+
+        public void Logging(string serviceName, string action, string actionState)
+        {
+            using (StreamWriter sw = new StreamWriter(GlobalVariables.path, true))
+            {
+                sw.WriteLine(GlobalVariables.UserIP + "\t" + GlobalVariables.HostName + "\t" + actionState + "\t" + action + "\t" + serviceName
+                    + "\t" + GetPersianDate(DateTime.Now) + "  " + DateTime.Now.ToString("HH:mm"));
+            }
+        }
+
+        private string GetPersianDate(DateTime dateTime)
+        {
+            var persianCalendar = new PersianCalendar();
+            var year = persianCalendar.GetYear(dateTime);
+            var month = persianCalendar.GetMonth(dateTime);
+            return string.Format("{0}/{1}/{2}", year, month, persianCalendar.GetDayOfMonth(dateTime));
+        }        
     }
 }
