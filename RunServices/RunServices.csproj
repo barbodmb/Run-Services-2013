@@ -2189,8 +2189,6 @@
     <Content Include="Content\fontawesome\svgs\solid\z.svg" />
     <Content Include="Content\nomatec.png" />
     <Content Include="Content\Site.css" />
-    <Content Include="Controllers\test.txt" />
-    <Content Include="Exeption\ErrorLog.txt" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\bootstrap.js" />

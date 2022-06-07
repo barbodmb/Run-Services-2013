@@ -79,9 +79,8 @@ namespace RunServices.Models
                     Logging(serviceName, "Start", actionState);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                //Console.WriteLine("Can not open Service...");
             }
         }//end of Start
 
@@ -97,14 +96,13 @@ namespace RunServices.Models
                     await Task.Run(() =>
                     {
                         service.Stop();
-                    });                    
+                    });
                     service.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(120));
                     Logging(serviceName, "Stop", actionState);
                 }
             }
             catch (Exception m)
             {
-                //Console.WriteLine("Can not open Service...");
             }
         }//end of Stop
 
@@ -147,19 +145,18 @@ namespace RunServices.Models
                         {
                             if (itemDetail.IntervalUnit == "M")
                             {
-                                if (Convert.ToInt32(itemDetail.Interval) / DateTime.Now.Minute == 0)
+                                if (DateTime.Now.Minute % Convert.ToInt32(itemDetail.Interval) == 0 )
                                 //&& (DateTime.Now.Second <= 10))
                                 {
                                     requestStatus = SendRequest(itemDetail.Url, itemDetail.RequestTimeOut);
                                     if (!requestStatus || item.ServiceStatus == ServiceControllerStatus.Stopped.ToString())
-                                    //|| item.ServiceStatus == ServiceControllerStatus.StopPending.ToString())
                                     {
                                         servicesInfo.Add(new ConfigService
                                         {
                                             ServiceName = item.ServiceName,
                                             ServiceStatus = item.ServiceStatus,
                                             Items = new ItemsCollection(sectionDetail = item.Items.SectionDetail),
-                                            IsPending = !requestStatus
+                                            IsPending = requestStatus
                                         });
                                     }
                                 }
@@ -167,19 +164,18 @@ namespace RunServices.Models
 
                             if (itemDetail.IntervalUnit == "H")
                             {
-                                if (Convert.ToInt32(itemDetail.Interval) / DateTime.Now.Hour == 0)
+                                if (DateTime.Now.Hour % Convert.ToInt32(itemDetail.Interval) == 0)
                                 //&& (DateTime.Now.Minute == 0))
                                 {
                                     var RequestStatus = SendRequest(itemDetail.Url, itemDetail.RequestTimeOut);
                                     if (!RequestStatus || item.ServiceStatus == ServiceControllerStatus.Stopped.ToString())
-                                    //|| item.ServiceStatus == ServiceControllerStatus.StopPending.ToString())
                                     {
                                         servicesInfo.Add(new ConfigService
                                         {
                                             ServiceName = item.ServiceName,
                                             ServiceStatus = item.ServiceStatus,
                                             Items = new ItemsCollection(sectionDetail = item.Items.SectionDetail),
-                                            IsPending = !RequestStatus
+                                            IsPending = RequestStatus
                                         });
                                     }
                                 }
@@ -205,12 +201,13 @@ namespace RunServices.Models
                     {
                         if (itemSectionDetail != null && itemSectionDetail.IntervalUnit != "")
                         {
-                            if (item.IsPending && (item.ServiceStatus != ServiceControllerStatus.Stopped.ToString()))
-                            //|| item.ServiceStatus != ServiceControllerStatus.StopPending.ToString()))
+                            if (item.IsPending && ((item.ServiceStatus != ServiceControllerStatus.Stopped.ToString())
+                                                  || item.ServiceStatus != ServiceControllerStatus.StopPending.ToString())
+                               )
                             {
                                 await RestartService(item.ServiceName, 1000, "Auto");
                             }
-                            else
+                            else //if ((!item.IsPending) && (item.ServiceStatus != ServiceControllerStatus.Stopped.ToString()))
                             {
                                 await StartService(item.ServiceName, "Auto");
                             }
@@ -230,12 +227,14 @@ namespace RunServices.Models
                 using (var httpClient = new HttpClient())
                 {
                     httpClient.Timeout = TimeSpan.FromSeconds(Convert.ToInt32(requestTimeOut));
-                    var response = httpClient.GetAsync(path).Result;
-
-                    if (response.StatusCode == HttpStatusCode.OK || path == "")
+                    if (path != "")
                     {
-                        return true;
-                    }
+                        var response = httpClient.GetAsync(path).Result;
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            return true;
+                        }
+                    }             
                 }
             }
             catch
@@ -260,6 +259,6 @@ namespace RunServices.Models
             var year = persianCalendar.GetYear(dateTime);
             var month = persianCalendar.GetMonth(dateTime);
             return string.Format("{0}/{1}/{2}", year, month, persianCalendar.GetDayOfMonth(dateTime));
-        }        
+        }
     }
 }

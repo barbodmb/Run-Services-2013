@@ -11,7 +11,7 @@ namespace RunServices.Models
         public static string HostName { get; set; }
         public static string path
         {
-            get { return @"C:\AppData\test.txt"; }
+            get { return @"C:\AppData\Log.txt"; }
         }
     }
 }

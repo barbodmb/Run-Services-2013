@@ -14,12 +14,6 @@ namespace RunServices.Exeption
             if (!filterContext.ExceptionHandled)
             {
                 filterContext.HttpContext.Response.Write("<h1>Error!</h1>" + filterContext.Exception.Message);
-
-                //var path = @"C:\AppData\test.txt"; // Directory.GetCurrentDirectory() + (@"\ErrorLog.txt");
-                //using (StreamWriter sw = new StreamWriter(path))
-                //{
-                //    sw.Write("\n" + filterContext.Exception.Message);
-                //}
             }
         }
     }

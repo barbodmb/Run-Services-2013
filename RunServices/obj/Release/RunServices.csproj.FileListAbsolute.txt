@@ -45,3 +45,6 @@ C:\test\RunServices.dll.config
 C:\test\RunServices.dll
 C:\test\RunServices.pdb
 C:\test\RunServices.XML
+D:\Test Projects\Run-Services-2013\RunServices\obj\Release\RunServices.csprojResolveAssemblyReference.cache
+D:\Test Projects\Run-Services-2013\RunServices\obj\Release\RunServices.dll
+D:\Test Projects\Run-Services-2013\RunServices\obj\Release\RunServices.pdb
