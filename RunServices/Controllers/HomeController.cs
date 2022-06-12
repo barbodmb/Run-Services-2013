@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using RunServices.Models;
 using RunServices.Exeption;
 using System.Globalization;
+using System.Text;
 
 namespace RunServices.Controllers
 {
@@ -19,6 +20,15 @@ namespace RunServices.Controllers
         {
             GlobalVariables.UserIP = Request.UserHostAddress;
             GlobalVariables.HostName = System.Net.Dns.GetHostEntry(Request.UserHostAddress).HostName;
+
+            //Create AppData and Log.txt
+            Directory.CreateDirectory(GlobalVariables.routePath);
+            if (!System.IO.File.Exists(GlobalVariables.path))
+            {
+                using (System.IO.FileStream fs = new System.IO.FileStream(GlobalVariables.path, System.IO.FileMode.Create)) ;
+            }
+            FileInfo fInfo = new FileInfo(GlobalVariables.path);
+            fInfo.IsReadOnly = true;
 
             ServiceProcess services = new ServiceProcess();
             List<ConfigService> obj = services.ServicesNameStatus();

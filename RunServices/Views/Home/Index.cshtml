@@ -26,7 +26,7 @@
 
                 <tr style="text-align: start;">
                     <td>@Html.Label(j.ToString())</td>
-                    <td>@Html.Label(@item.ServiceName)</td>
+                    <td>@Html.Label(@item.Items.SectionDetail[i].DisplayName)</td>
                     <td>@Html.Label(@item.ServiceStatus)</td>
                     <td style="display: flex">
                         @if (@item.ServiceStatus == "Running" || @item.ServiceStatus == "StartPending")

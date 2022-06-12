@@ -140,12 +140,11 @@ namespace RunServices.Models
                 {
                     bool requestStatus = false;
                     foreach (var item in servicesName)
-                    {
                         foreach (SectionDetail itemDetail in item.Items.SectionDetail)
                         {
                             if (itemDetail.IntervalUnit == "M")
                             {
-                                if (DateTime.Now.Minute % Convert.ToInt32(itemDetail.Interval) == 0 )
+                                if (DateTime.Now.Minute % Convert.ToInt32(itemDetail.Interval) == 0)
                                 //&& (DateTime.Now.Second <= 10))
                                 {
                                     requestStatus = SendRequest(itemDetail.Url, itemDetail.RequestTimeOut);
@@ -181,7 +180,6 @@ namespace RunServices.Models
                                 }
                             }
                         }
-                    }
                 }
             }
             catch
@@ -196,7 +194,6 @@ namespace RunServices.Models
             try
             {
                 foreach (var item in configServices)
-                {
                     foreach (SectionDetail itemSectionDetail in item.Items.SectionDetail)
                     {
                         if (itemSectionDetail != null && itemSectionDetail.IntervalUnit != "")
@@ -213,7 +210,6 @@ namespace RunServices.Models
                             }
                         }
                     }
-                }
             }
             catch
             {
@@ -234,7 +230,7 @@ namespace RunServices.Models
                         {
                             return true;
                         }
-                    }             
+                    }
                 }
             }
             catch

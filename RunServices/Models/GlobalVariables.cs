@@ -13,5 +13,9 @@ namespace RunServices.Models
         {
             get { return @"C:\AppData\Log.txt"; }
         }
+        public static string routePath
+        {
+            get { return @"C:\AppData"; }
+        }
     }
 }
